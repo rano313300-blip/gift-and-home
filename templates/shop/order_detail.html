@@ -1,0 +1,37 @@
+{% extends "base.html" %}{% load shop_extras %}
+{% block title %}سفارش {{ order.code }} | دورهمی{% endblock %}
+{% block content %}
+<div class="wrap"><div class="success">
+  {% if order.is_paid %}
+    <div class="big">🎉</div><h2>سفارش شما ثبت شد</h2>
+    <p class="muted" style="margin-top:8px">{{ order.name }} عزیز، از خرید شما سپاسگزاریم. کد سفارش را برای پیگیری نگه دارید.</p>
+  {% elif order.status == 'cancelled' %}
+    <div class="big">🚫</div><h2>این سفارش لغو شده است</h2>
+  {% else %}
+    <div class="big">⏳</div><h2>پرداخت این سفارش کامل نشده است</h2>
+    <p class="muted" style="margin-top:8px">می‌توانید دوباره پرداخت را انجام دهید. کالاها تا زمان پرداخت از انبار کسر نمی‌شوند.</p>
+  {% endif %}
+
+  <div class="codes">
+    <div><span>کد سفارش</span><b>{{ order.code }}</b></div>
+    <div><span>وضعیت</span><b>{{ order.get_status_display }}</b></div>
+    {% if order.ref_id %}<div><span>شماره پیگیری بانکی</span><b>{{ order.ref_id|fa }}</b></div>{% endif %}
+    <div><span>مبلغ</span><b>{{ order.total|toman }}</b></div>
+    <div><span>روش ارسال</span><b>{{ order.get_shipping_method_display }} ({{ order.shipping_info.eta }})</b></div>
+    {% if order.tracking_code %}<div><span>کد رهگیری مرسوله</span><b>{{ order.tracking_code|fa }}</b></div>{% endif %}
+    <div><span>نشانی</span><b style="max-width:60%;text-align:left">{{ order.province }}، {{ order.city }}، {{ order.address }}</b></div>
+  </div>
+
+  <div class="codes">
+    {% for i in items %}<div><span>{{ i.name }} × {{ i.qty|fa }}</span><b>{{ i.line_total|toman }}</b></div>{% endfor %}
+    {% if order.wrap_cost %}<div><span>بسته‌بندی کادویی</span><b>{{ order.wrap_cost|toman }}</b></div>{% endif %}
+    <div><span>هزینه ارسال</span><b>{% if order.shipping_cost %}{{ order.shipping_cost|toman }}{% else %}رایگان{% endif %}</b></div>
+  </div>
+
+  {% if order.status == 'pending' %}
+  <form method="post" action="{% url 'shop:payment_start' order.code %}">{% csrf_token %}
+    <button class="btn btn-primary">پرداخت سفارش</button>
+  </form>
+  {% else %}<a class="btn btn-primary" href="{% url 'shop:product_list' %}">ادامه خرید</a>{% endif %}
+</div></div>
+{% endblock %}

@@ -1,0 +1,5 @@
+<label {% if f.name == 'address' %}class="full"{% endif %}>
+  <span>{{ f.label }}</span>
+  {{ f }}
+  {% for e in f.errors %}<small class="err">{{ e }}</small>{% endfor %}
+</label>

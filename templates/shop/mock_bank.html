@@ -1,0 +1,22 @@
+{% load static shop_extras %}<!DOCTYPE html>
+<html lang="fa" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>درگاه آزمایشی</title>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'css/style.css' %}"></head>
+<body style="display:grid;place-items:center;min-height:100vh;padding:16px">
+<div class="gw">
+  <div class="top"><b>💳 درگاه آزمایشی</b><small>فقط برای توسعه</small></div>
+  <div class="bd">
+    <div class="info">
+      <div><span>پذیرنده</span><b>فروشگاه دورهمی</b></div>
+      <div><span>سفارش</span><b>{{ order.code }}</b></div>
+      <div><span>مبلغ</span><b>{{ order.total|toman }}</b></div>
+    </div>
+    <p class="muted" style="font-size:.85rem;margin-bottom:12px">این صفحه جایگزین صفحه بانک است و هیچ مبلغی کسر نمی‌شود. برای درگاه واقعی، PAYMENT_GATEWAY=zarinpal را تنظیم کنید.</p>
+    <form method="post">{% csrf_token %}
+      <button class="btn btn-primary btn-block" name="action" value="pay">پرداخت موفق</button>
+      <button class="btn btn-block" style="margin-top:8px" name="action" value="cancel">انصراف / پرداخت ناموفق</button>
+    </form>
+  </div>
+</div>
+</body></html>

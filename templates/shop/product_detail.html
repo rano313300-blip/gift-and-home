@@ -1,0 +1,48 @@
+{% extends "base.html" %}{% load static shop_extras %}
+{% block title %}{{ product.name }} | دورهمی{% endblock %}
+{% block desc %}{{ product.description|truncatechars:150 }}{% endblock %}
+{% block extra_head %}
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Product","name":"{{ product.name|escapejs }}","description":"{{ product.description|escapejs }}",
+ "offers":{"@type":"Offer","priceCurrency":"IRR","price":"{{ product.price }}0","availability":"{% if product.in_stock %}https://schema.org/InStock{% else %}https://schema.org/OutOfStock{% endif %}"}}
+</script>
+{% endblock %}
+{% block content %}
+<nav class="crumbs wrap" aria-label="مسیر"><a href="{% url 'shop:home' %}">خانه</a> ‹ <a href="{% url 'shop:product_list' %}">فروشگاه</a> ‹ <a href="{% url 'shop:product_list' %}?cat={{ product.category.slug }}">{{ product.category.name }}</a> ‹ <span>{{ product.name }}</span></nav>
+<section class="s"><div class="wrap pd-page">
+  <div class="pd-pic" style="background:{{ product.bg_color }}">
+    {% if product.image %}<img src="{{ product.image.url }}" alt="{{ product.name }}">{% else %}{{ product.emoji }}{% endif %}
+  </div>
+  <div>
+    <p class="muted"><a href="{% url 'shop:product_list' %}?cat={{ product.category.slug }}">{{ product.category.name }}</a></p>
+    <h1 style="font-size:2rem">{{ product.name }}</h1>
+    <div class="stars" style="margin:6px 0">{{ product.rating|stars }}<em>{{ product.rating|fa }}</em></div>
+    <p style="margin:12px 0">{{ product.description|linebreaksbr }}</p>
+    <p class="muted" style="font-size:.9rem">وزن تقریبی: {{ product.weight_kg|fa }} کیلوگرم</p>
+    <div class="price" style="margin:16px 0">
+      <b style="font-size:1.6rem">{{ product.price|toman }}</b>
+      {% if product.old_price %}<s>{{ product.old_price|num }}</s><span class="tag" style="position:static">{{ product.discount_percent|fa }}٪ تخفیف</span>{% endif %}
+    </div>
+    {% if product.in_stock %}
+    <form method="post" action="{% url 'shop:cart_add' product.pk %}" class="buyrow">{% csrf_token %}
+      <input type="hidden" name="next" value="cart">
+      <input type="number" name="qty" value="1" min="1" max="{{ product.stock }}" aria-label="تعداد" class="qty-in">
+      <button class="btn btn-primary">افزودن به سبد خرید</button>
+    </form>
+    {% if product.stock <= 5 %}<p style="color:var(--ribbon);margin-top:8px">فقط {{ product.stock|fa }} عدد در انبار مانده است.</p>{% endif %}
+    {% else %}<button class="btn" disabled>ناموجود</button>{% endif %}
+    <ul class="pd-trust">
+      <li>🚚 ارسال با پست، پیشتاز و تیپاکس</li>
+      <li>🎀 امکان بسته‌بندی کادویی با کارت پیام</li>
+      <li>↩️ ۷ روز ضمانت بازگشت کالا</li>
+      <li>🔒 پرداخت امن با درگاه بانکی</li>
+    </ul>
+  </div>
+</div></section>
+{% if related %}
+<section class="s" style="padding-top:0"><div class="wrap">
+  <div class="head"><h2>محصولات مشابه</h2></div>
+  <div class="grid">{% for p in related %}{% include "shop/_card.html" %}{% endfor %}</div>
+</div></section>
+{% endif %}
+{% endblock %}

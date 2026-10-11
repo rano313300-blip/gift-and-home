@@ -1,0 +1,12 @@
+{% extends "base.html" %}{% load shop_extras %}
+{% block title %}پیگیری سفارش | دورهمی{% endblock %}
+{% block content %}
+<div class="pagehead"><div class="wrap"><h1 style="font-size:2.4rem">پیگیری سفارش</h1><p class="muted">کد سفارش و شماره موبایل ثبت‌شده را وارد کنید.</p></div></div>
+<section class="s"><div class="wrap" style="max-width:520px">
+  <form method="post" class="panel f" style="grid-template-columns:1fr">{% csrf_token %}
+    <label><span>کد سفارش</span><input name="code" placeholder="DM-XXXXXXXXXX" style="direction:ltr;text-align:left" required></label>
+    <label><span>شماره موبایل</span><input name="phone" inputmode="numeric" placeholder="۰۹۱۲۱۲۳۴۵۶۷" required></label>
+    <button class="btn btn-dark">پیگیری</button>
+  </form>
+</div></section>
+{% endblock %}

@@ -1,0 +1,58 @@
+{% extends "base.html" %}{% load shop_extras %}
+{% block title %}ثبت سفارش و پرداخت | دورهمی{% endblock %}
+{% block content %}
+<div class="pagehead"><div class="wrap"><h1 style="font-size:2.4rem">ثبت سفارش و پرداخت</h1></div></div>
+<section class="s" style="padding-top:32px"><div class="wrap">
+<form method="post" class="layout" id="checkout-form" novalidate>{% csrf_token %}
+  <div class="stack">
+    <div class="panel">
+      <h3 class="step-title"><i>۱</i>مشخصات گیرنده</h3>
+      {% if form.non_field_errors %}<div class="msg error">{{ form.non_field_errors }}</div>{% endif %}
+      <div class="f">
+        {% include "shop/_field.html" with f=form.name %}
+        {% include "shop/_field.html" with f=form.phone %}
+        {% include "shop/_field.html" with f=form.province %}
+        {% include "shop/_field.html" with f=form.city %}
+        {% include "shop/_field.html" with f=form.address %}
+        {% include "shop/_field.html" with f=form.postal_code %}
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3 class="step-title"><i>۲</i>روش ارسال</h3>
+      {% for o in options %}
+      <label class="opt">
+        <input type="radio" name="shipping_method" value="{{ o.key }}" data-cost="{{ o.cost }}" {% if selected == o.key %}checked{% endif %}>
+        <span class="em">{{ o.emoji }}</span>
+        <span class="tx"><b>{{ o.name }}</b><small>تحویل: {{ o.eta }} — {{ o.note }}</small></span>
+        <span class="pr">{% if o.cost %}{{ o.cost|toman }}{% else %}رایگان{% endif %}</span>
+      </label>
+      {% endfor %}
+      {% for e in form.shipping_method.errors %}<small class="err">{{ e }}</small>{% endfor %}
+    </div>
+
+    <div class="panel">
+      <h3 class="step-title"><i>۳</i>پرداخت اینترنتی</h3>
+      <div class="opt" style="cursor:default;border-color:var(--teal);background:var(--mint)">
+        <span class="em">💳</span>
+        <span class="tx"><b>{% if gateway == 'zarinpal' %}درگاه امن زرین‌پال{% else %}درگاه آزمایشی (نسخه توسعه){% endif %}</b>
+        <small>پس از زدن دکمه پرداخت به صفحه بانک منتقل می‌شوید. پرداخت با تمام کارت‌های عضو شتاب ممکن است.</small></span>
+      </div>
+    </div>
+  </div>
+
+  <aside class="panel sum" style="position:sticky;top:90px" id="order-sum" data-base="{{ s.subtotal|add:s.wrap_cost }}">
+    <h3 style="margin-bottom:8px">خلاصه سفارش</h3>
+    {% for l in s.lines %}<div class="mini"><span>{{ l.product.emoji }} {{ l.product.name|truncatechars:28 }} × {{ l.qty|fa }}</span><span>{{ l.total|num }}</span></div>{% endfor %}
+    <div style="margin-top:10px"><span>جمع کالاها</span><span>{{ s.subtotal|toman }}</span></div>
+    {% if s.wrap_cost %}<div><span>بسته‌بندی کادویی</span><span>{{ s.wrap_cost|toman }}</span></div>{% endif %}
+    <div><span>هزینه ارسال</span><span id="sum-ship">{% if s.shipping_cost %}{{ s.shipping_cost|toman }}{% else %}رایگان{% endif %}</span></div>
+    {% if s.saving %}<div class="g"><span>سود شما از تخفیف</span><span>{{ s.saving|toman }}</span></div>{% endif %}
+    <div class="t"><span>مبلغ قابل پرداخت</span><span id="sum-total">{{ s.total|toman }}</span></div>
+    <button class="btn btn-primary btn-block" style="margin-top:14px">پرداخت و ثبت نهایی سفارش</button>
+    <p class="muted" style="font-size:.8rem;margin-top:10px;text-align:center">🔒 اتصال امن به درگاه بانکی</p>
+    <p style="text-align:center;margin-top:6px"><a href="{% url 'shop:cart' %}" class="muted" style="font-size:.85rem">بازگشت به سبد خرید</a></p>
+  </aside>
+</form>
+</div></section>
+{% endblock %}

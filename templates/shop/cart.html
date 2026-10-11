@@ -1,0 +1,47 @@
+{% extends "base.html" %}{% load shop_extras %}
+{% block title %}سبد خرید | دورهمی{% endblock %}
+{% block content %}
+<div class="pagehead"><div class="wrap"><h1 style="font-size:2.4rem">سبد خرید</h1></div></div>
+{% if not s.lines %}
+<div class="wrap"><div class="empty" style="padding:90px 0"><div class="em">🛒</div><h2>سبد خرید شما خالی است</h2><p class="muted" style="margin:8px 0 22px">چند محصول انتخاب کنید و دوباره برگردید.</p><a class="btn btn-primary" href="{% url 'shop:product_list' %}">رفتن به فروشگاه</a></div></div>
+{% else %}
+<section class="s" style="padding-top:32px"><div class="wrap">
+<form method="post" action="{% url 'shop:cart_update' %}" class="layout">{% csrf_token %}
+  <button type="submit" class="sr-only" tabindex="-1" aria-hidden="true">به‌روزرسانی</button>
+  <div>
+    <div class="panel">
+      {% for l in s.lines %}
+      <div class="row">
+        <div class="pic" style="background:{{ l.product.bg_color }}">{% if l.product.image %}<img src="{{ l.product.image.url }}" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:14px">{% else %}{{ l.product.emoji }}{% endif %}</div>
+        <div>
+          <a href="{{ l.product.get_absolute_url }}"><b>{{ l.product.name }}</b></a>
+          <div class="muted" style="font-size:.9rem">{{ l.product.price|toman }}</div>
+          <div style="margin-top:6px">
+            <input type="number" class="qty-in" name="qty_{{ l.product.pk }}" value="{{ l.qty }}" min="0" max="{{ l.product.stock }}" aria-label="تعداد">
+            <button class="rm" name="remove" value="{{ l.product.pk }}">حذف</button>
+          </div>
+        </div>
+        <b>{{ l.total|toman }}</b>
+      </div>
+      {% endfor %}
+    </div>
+    <div class="wrapbox">
+      <label><input type="checkbox" name="gift_wrap" {% if cart.gift_wrap %}checked{% endif %}> بسته‌بندی کادویی با روبان ({{ GIFT_WRAP_COST|toman }})</label>
+      <textarea name="gift_note" maxlength="200" placeholder="متن کارت پیام (اختیاری)">{{ cart.gift_note }}</textarea>
+    </div>
+  </div>
+  <aside class="panel sum">
+    <h3 style="margin-bottom:10px">خلاصه سفارش</h3>
+    <div><span>جمع کالاها ({{ cart.count|fa }} عدد)</span><span>{{ s.subtotal|toman }}</span></div>
+    {% if s.saving %}<div class="g"><span>سود شما از تخفیف</span><span>{{ s.saving|toman }}</span></div>{% endif %}
+    {% if s.wrap_cost %}<div><span>بسته‌بندی کادویی</span><span>{{ s.wrap_cost|toman }}</span></div>{% endif %}
+    <div class="muted"><span>هزینه ارسال</span><span>در مرحله بعد</span></div>
+    <div class="t"><span>مبلغ قابل پرداخت</span><span>{{ s.total|toman }}</span></div>
+    <p class="muted" style="font-size:.85rem;margin:10px 0">{% if s.subtotal >= FREE_SHIPPING_FROM %}✅ ارسال با پست عادی برای شما رایگان است.{% else %}با خرید {{ FREE_SHIPPING_FROM|toman }} یا بیشتر، ارسال با پست رایگان می‌شود.{% endif %}</p>
+    <button class="btn btn-primary btn-block" name="go" value="checkout">ادامه و ثبت سفارش</button>
+    <button class="btn btn-ghost btn-block" style="margin-top:8px">به‌روزرسانی سبد خرید</button>
+  </aside>
+</form>
+</div></section>
+{% endif %}
+{% endblock %}

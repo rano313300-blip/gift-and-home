@@ -1,0 +1,88 @@
+{% extends "base.html" %}{% load static shop_extras %}
+{% block content %}
+<section class="hero"><div class="wrap">
+  <div>
+    <span class="pill">✨ هدیه‌های ماندگار برای لحظه‌های خاص</span>
+    <h1>برای هر دورهمی،<br>هدیه‌ای که یادگار می‌ماند</h1>
+    <p class="lead">لوازم آشپزخانه، ظروف سرو و پک‌های کادویی آماده؛ با بسته‌بندی هدیه، کارت پیام دست‌نویس و ارسال به سراسر ایران.</p>
+    <div class="cta">
+      <a class="btn btn-primary" href="{% url 'shop:product_list' %}">مشاهده فروشگاه ←</a>
+      <a class="btn btn-ghost" href="{% url 'shop:product_list' %}?cat=pack">پک‌های کادویی</a>
+    </div>
+    <ul class="hero-points">
+      <li>✓ ضمانت اصالت کالا</li><li>✓ پرداخت امن بانکی</li><li>✓ بازگشت ۷ روزه</li>
+    </ul>
+  </div>
+  <div class="hero-art">
+    <svg viewBox="0 0 400 400" aria-hidden="true">
+      <ellipse cx="200" cy="372" rx="150" ry="14" fill="#0e7c7b" opacity=".15"/>
+      <rect x="70" y="180" width="260" height="190" rx="14" fill="#0e7c7b"/>
+      <rect x="50" y="138" width="300" height="60" rx="12" fill="#0a5857"/>
+      <rect x="178" y="138" width="44" height="232" fill="#f2a93b"/>
+      <g class="bow">
+        <path d="M200 132 C150 60 90 80 110 125 C125 150 180 140 200 132Z" fill="#d3344c"/>
+        <path d="M200 132 C250 60 310 80 290 125 C275 150 220 140 200 132Z" fill="#d3344c"/>
+        <path d="M200 132 C165 85 135 100 142 120 C150 132 185 134 200 132Z" fill="#b72a40"/>
+        <path d="M200 132 C235 85 265 100 258 120 C250 132 215 134 200 132Z" fill="#b72a40"/>
+        <circle cx="200" cy="130" r="17" fill="#f2a93b"/>
+      </g>
+    </svg>
+    <!-- عکس واقعی: فایل static/img/hero.jpg را بگذارید تا جایگزین تصویر گرافیکی شود -->
+    <img class="hero-photo" src="{% static 'img/hero.jpg' %}" alt="" onerror="this.remove()">
+    <div class="float f1">☕</div><div class="float f2">🍯</div><div class="float f3">🍽️</div><div class="float f4">🕯️</div>
+  </div>
+</div><div class="hero-ribbon"></div></section>
+
+<section class="strip"><div class="wrap">
+  <div><span>🚚</span><b>ارسال به سراسر ایران</b><small>پست، پیشتاز و تیپاکس</small></div>
+  <div><span>🔒</span><b>پرداخت امن</b><small>درگاه بانکی معتبر</small></div>
+  <div><span>🎀</span><b>بسته‌بندی کادویی</b><small>همراه کارت پیام</small></div>
+  <div><span>💬</span><b>پشتیبانی هر روز</b><small>۹ صبح تا ۹ شب</small></div>
+</div></section>
+
+<section class="s reveal"><div class="wrap">
+  <div class="head"><div><h2>چه چیزی می‌خواهید؟</h2><p>از وسایل روزمره آشپزخانه تا هدیه برای جشن‌ها و مهمانی‌ها.</p></div></div>
+  <div class="mosaic">
+    <a href="{% url 'shop:product_list' %}?cat=kitchen" class="cat c1"><span class="em">🍳</span><h3>لوازم آشپزخانه</h3><span>قابلمه، چاقو، تخته برش و ادویه‌خوری</span></a>
+    <a href="{% url 'shop:product_list' %}?cat=table" class="cat c2"><span class="em">🫖</span><h3>سرویس و ظروف</h3><span>فنجان، قوری، بشقاب سرو</span></a>
+    <a href="{% url 'shop:product_list' %}?cat=gift" class="cat c3"><span class="em">🕯️</span><h3>هدیه و کادو</h3><span>شمع، فلاسک و هدیه‌های کوچک</span></a>
+    <a href="{% url 'shop:product_list' %}?cat=pack" class="cat c4"><span class="em">🎁</span><h3>پک کادویی</h3></a>
+  </div>
+</div></section>
+
+{% if offers %}
+<section class="s reveal offers" style="padding-top:0"><div class="wrap">
+  <div class="head"><div><h2>🔥 پیشنهادهای ویژه</h2><p>تخفیف‌دارهای این هفته، تا پایان موجودی.</p></div><a class="btn btn-ghost" href="{% url 'shop:product_list' %}?sort=pop">همه محصولات</a></div>
+  <div class="grid">{% for p in offers %}{% include "shop/_card.html" %}{% endfor %}</div>
+</div></section>
+{% endif %}
+
+<section class="s reveal" style="padding-top:0"><div class="wrap">
+  <div class="head"><div><h2>پرفروش‌های دورهمی</h2><p>محصولاتی که مشتریان بیشتر از همه سفارش داده‌اند.</p></div><a class="btn btn-ghost" href="{% url 'shop:product_list' %}?sort=pop">مشاهده بیشتر</a></div>
+  <div class="grid">{% for p in best %}{% include "shop/_card.html" %}{% empty %}<p class="muted">هنوز محصولی ثبت نشده است.</p>{% endfor %}</div>
+</div></section>
+
+<section class="s band reveal"><div class="wrap">
+  <div class="head"><div><h2>هدیه را ما می‌پیچیم</h2><p style="color:#b9cdcb">در سبد خرید گزینه بسته‌بندی کادویی را فعال کنید و پیام خود را بنویسید.</p></div><a class="btn btn-primary" href="{% url 'shop:product_list' %}?cat=pack">دیدن پک‌های هدیه</a></div>
+  <div class="feat">
+    <div><span class="ic">🎀</span><h3>بسته‌بندی کادویی</h3><p>کاغذ کادو، روبان ساتن و جعبه محافظ، آماده‌ی هدیه‌دادن.</p></div>
+    <div><span class="ic">💌</span><h3>کارت پیام دست‌نویس</h3><p>متن شما روی کارت نوشته و داخل بسته گذاشته می‌شود.</p></div>
+    <div><span class="ic">🔒</span><h3>پرداخت امن</h3><p>پرداخت اینترنتی از طریق درگاه‌های بانکی دارای مجوز شاپرک.</p></div>
+    <div><span class="ic">↩️</span><h3>بازگشت ۷ روزه</h3><p>در صورت آسیب‌دیدگی یا مغایرت، کالا بدون هزینه تعویض می‌شود.</p></div>
+  </div>
+</div></section>
+
+{% if newest %}
+<section class="s reveal"><div class="wrap">
+  <div class="head"><div><h2>تازه‌ترین محصولات</h2><p>جدیدترین اضافه‌شده‌ها به فروشگاه.</p></div></div>
+  <div class="grid">{% for p in newest %}{% include "shop/_card.html" %}{% endfor %}</div>
+</div></section>
+{% endif %}
+
+<section class="s reveal" style="padding-top:0"><div class="wrap">
+  <div class="head"><div><h2>سه روش ارسال، یک انتخاب مناسب</h2><p>روش ارسال را هنگام ثبت سفارش انتخاب می‌کنید و هزینه همان لحظه نمایش داده می‌شود.</p></div></div>
+  <div class="ship3">
+    {% for m in SHIPPING_METHODS %}<div class="sc"><h3>{{ m.emoji }} {{ m.name }}</h3><div class="big">از {{ m.base|toman }}</div><p>زمان تحویل: {{ m.eta }}</p><p class="muted">{{ m.note }}</p></div>{% endfor %}
+  </div>
+</div></section>
+{% endblock %}

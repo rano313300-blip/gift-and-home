@@ -1,0 +1,91 @@
+{% load static shop_extras %}<!DOCTYPE html>
+<!-- طراحی و توسعه: AMIR AMMARZAD -->
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{% block title %}دورهمی | فروشگاه هدیه و لوازم آشپزخانه{% endblock %}</title>
+<meta name="description" content="{% block desc %}خرید آنلاین لوازم آشپزخانه، ظروف سرو و پک‌های کادویی با بسته‌بندی هدیه و ارسال با پست، پست پیشتاز و تیپاکس{% endblock %}">
+<meta name="author" content="AMIR AMMARZAD">
+<meta name="theme-color" content="#0e7c7b">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="fa_IR">
+<meta property="og:site_name" content="دورهمی">
+<meta property="og:title" content="{% block ogtitle %}دورهمی | فروشگاه هدیه و لوازم آشپزخانه{% endblock %}">
+<link rel="icon" href="{% static 'img/favicon.svg' %}" type="image/svg+xml">
+<link rel="icon" href="{% static 'img/favicon.ico' %}" sizes="any">
+<link rel="icon" href="{% static 'img/favicon-32.png' %}" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="{% static 'img/apple-touch-icon.png' %}">
+<link rel="manifest" href="{% static 'img/site.webmanifest' %}">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lalezar&family=Vazirmatn:wght@400;500;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+<script>document.documentElement.classList.add('js')</script>
+{% block extra_head %}{% endblock %}
+</head>
+<body>
+<a class="skip" href="#main">پرش به محتوا</a>
+<div class="stripe"></div>
+<div class="promo">🚚 ارسال رایگان با پست برای سفارش‌های بالای <b>{{ FREE_SHIPPING_FROM|toman }}</b> &nbsp;|&nbsp; 🎀 بسته‌بندی کادویی با کارت پیام</div>
+<header id="top">
+  <div class="wrap bar">
+    <a href="{% url 'shop:home' %}" class="logo" aria-label="دورهمی">
+      <img src="{% static 'img/favicon.svg' %}" alt="" width="42" height="42"><span>دورهمی</span>
+    </a>
+    <nav aria-label="منوی اصلی">
+      <a href="{% url 'shop:home' %}" {% if request.resolver_match.url_name == 'home' %}class="on"{% endif %}>خانه</a>
+      <a href="{% url 'shop:product_list' %}" {% if request.resolver_match.url_name == 'product_list' %}class="on"{% endif %}>فروشگاه</a>
+      <a href="{% url 'shop:track' %}" {% if request.resolver_match.url_name == 'track' %}class="on"{% endif %}>پیگیری سفارش</a>
+      <a href="{% url 'shop:about' %}" {% if request.resolver_match.url_name == 'about' %}class="on"{% endif %}>درباره ما و تماس</a>
+    </nav>
+    <form class="hsearch" action="{% url 'shop:product_list' %}" method="get" role="search">
+      <input type="search" name="q" placeholder="جستجو در محصولات..." aria-label="جستجو">
+      <button aria-label="جستجو">🔍</button>
+    </form>
+    <a href="{% url 'shop:cart' %}" class="cart-btn">🛒 <span class="cart-label">سبد خرید</span> <b>{{ cart_count|fa }}</b></a>
+  </div>
+</header>
+
+{% if messages %}
+<div class="wrap msgs">
+  {% for m in messages %}<div class="msg {{ m.tags }}" role="status">{{ m }}</div>{% endfor %}
+</div>
+{% endif %}
+
+<main id="main">{% block content %}{% endblock %}</main>
+
+<footer>
+  <div class="wrap">
+    <div>
+      <div class="logo" style="color:#fff"><img src="{% static 'img/favicon.svg' %}" alt="" width="42" height="42"><span>دورهمی</span></div>
+      <p style="margin-top:12px;font-size:.92rem">فروشگاه تخصصی لوازم آشپزخانه، ظروف سرو و هدیه‌های آماده. هر سفارش با دقت بسته‌بندی می‌شود.</p>
+      <div class="trust"><span>🔒 پرداخت امن</span><span>✅ ضمانت اصالت کالا</span><span>↩️ ۷ روز بازگشت</span></div>
+    </div>
+    <div><h4>فروشگاه</h4>
+      {% for c in nav_categories %}<a href="{% url 'shop:product_list' %}?cat={{ c.slug }}">{{ c.name }}</a>{% endfor %}
+    </div>
+    <div><h4>راهنما</h4>
+      <a href="{% url 'shop:about' %}#shipping">روش‌های ارسال</a>
+      <a href="{% url 'shop:about' %}#faq">سوالات متداول</a>
+      <a href="{% url 'shop:track' %}">پیگیری سفارش</a>
+      <a href="{% url 'shop:cart' %}">سبد خرید</a>
+    </div>
+    <div><h4>تماس</h4><a>📞 ۰۲۱-۱۲۳۴۵۶۷۸</a><a>✉️ info@dorhami.ir</a><a>📍 تهران، خیابان ولیعصر</a></div>
+  </div>
+  <div class="copy">
+    © ۱۴۰۵ دورهمی؛ تمامی حقوق محفوظ است.
+    <span class="dev">طراحی و توسعه وب‌سایت: <b dir="ltr">AMIR AMMARZAD</b></span>
+  </div>
+</footer>
+
+<nav class="mnav" aria-label="منوی موبایل">
+  <a href="{% url 'shop:home' %}" {% if request.resolver_match.url_name == 'home' %}class="on"{% endif %}><span>🏠</span>خانه</a>
+  <a href="{% url 'shop:product_list' %}" {% if request.resolver_match.url_name == 'product_list' %}class="on"{% endif %}><span>🛍️</span>فروشگاه</a>
+  <a href="{% url 'shop:cart' %}" {% if request.resolver_match.url_name == 'cart' %}class="on"{% endif %}><span>🛒<i>{{ cart_count|fa }}</i></span>سبد</a>
+  <a href="{% url 'shop:track' %}" {% if request.resolver_match.url_name == 'track' %}class="on"{% endif %}><span>📦</span>پیگیری</a>
+</nav>
+<a href="#top" class="totop" aria-label="بازگشت به بالا">↑</a>
+<script src="{% static 'js/app.js' %}" defer></script>
+</body>
+</html>

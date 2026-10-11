@@ -1,0 +1,49 @@
+{% extends "base.html" %}{% load shop_extras %}
+{% block title %}درباره ما و تماس | دورهمی{% endblock %}
+{% block content %}
+<div class="pagehead"><div class="wrap"><h1 style="font-size:2.4rem">درباره ما و تماس</h1></div></div>
+<section class="s" style="padding-bottom:30px"><div class="wrap about-grid">
+  <div>
+    <h2>آشپزخانه جایی است که دورهمی‌ها شروع می‌شوند</h2>
+    <p style="margin-top:12px">دورهمی با یک هدف شروع شد: پیدا کردن هدیه‌ای که هم زیبا باشد و هم واقعاً استفاده شود. ما محصولات را یکی‌یکی بررسی می‌کنیم، با دقت بسته‌بندی می‌کنیم و برای رسیدن سالم آن‌ها وقت می‌گذاریم.</p>
+    <p style="margin-top:12px">از قابلمه و چاقوی آشپزخانه تا پک‌های جهیزیه و هدیه‌های کوچک، همه چیز را برای شما در یک فروشگاه جمع کرده‌ایم.</p>
+  </div>
+  <div class="vals">
+    <div class="val"><div class="ic">✅</div><b>اصالت کالا</b><p class="muted">همه محصولات با ضمانت اصالت عرضه می‌شوند.</p></div>
+    <div class="val"><div class="ic">📦</div><b>بسته‌بندی محکم</b><p class="muted">ظروف شکستنی با فوم و کارتن دوجداره ارسال می‌شوند.</p></div>
+    <div class="val"><div class="ic">💬</div><b>پشتیبانی واقعی</b><p class="muted">هر روز از ۹ صبح تا ۹ شب پاسخگو هستیم.</p></div>
+  </div>
+</div></section>
+
+<section class="s" style="padding-top:20px" id="shipping"><div class="wrap">
+  <h2 style="margin-bottom:18px">روش‌های ارسال و هزینه</h2>
+  <div class="ship3">
+    {% for m in SHIPPING_METHODS %}<div class="sc"><h3>{{ m.emoji }} {{ m.name }}</h3><div class="big">از {{ m.base|toman }}</div><p>زمان تحویل: {{ m.eta }}</p><p class="muted">به‌ازای هر کیلوگرم اضافه: {{ m.extra|toman }}</p></div>{% endfor %}
+  </div>
+</div></section>
+
+<section class="s" style="padding-top:20px"><div class="wrap contact">
+  <div id="faq">
+    <h2 style="margin-bottom:14px">سوالات متداول</h2>
+    <details><summary>پرداخت چگونه انجام می‌شود؟</summary><p>پرداخت به‌صورت اینترنتی و از طریق درگاه بانکی انجام می‌شود. اطلاعات کارت شما نزد فروشگاه ذخیره نمی‌شود.</p></details>
+    <details><summary>ارسال رایگان چه شرایطی دارد؟</summary><p>برای سفارش‌های بالای {{ FREE_SHIPPING_FROM|toman }}، ارسال با پست عادی رایگان است.</p></details>
+    <details><summary>اگر کالا آسیب‌دیده رسید چه کنم؟</summary><p>تا ۷ روز پس از تحویل با پشتیبانی تماس بگیرید؛ کالا بدون هزینه تعویض یا وجه بازگردانده می‌شود.</p></details>
+    <details><summary>چطور سفارشم را رهگیری کنم؟</summary><p>از صفحه «پیگیری سفارش» با کد سفارش و شماره موبایل می‌توانید وضعیت و کد رهگیری مرسوله را ببینید.</p></details>
+  </div>
+  <div class="panel">
+    <h2 style="font-size:1.5rem;margin-bottom:12px">با ما در تماس باشید</h2>
+    <div class="cinfo"><p>📞 ۰۲۱-۱۲۳۴۵۶۷۸</p><p>✉️ info@dorhami.ir</p><p>📍 تهران، خیابان ولیعصر، پلاک ۱۲۰</p></div>
+    <form method="post" class="f" style="margin-top:12px">{% csrf_token %}
+      <label><span>نام</span><input name="name" required></label>
+      <label><span>موبایل</span><input name="phone" inputmode="numeric"></label>
+      <label class="full"><span>پیام شما</span><textarea name="text" rows="3" required></textarea></label>
+      <button class="btn btn-dark full">ارسال پیام</button>
+    </form>
+  </div>
+</div></section>
+<section class="s" style="padding-top:0"><div class="wrap"><div class="devcard">
+  <span class="ic">👨‍💻</span>
+  <div><b>طراحی و توسعه وب‌سایت</b><p dir="ltr" style="font-family:var(--body);font-weight:800;font-size:1.3rem">AMIR AMMARZAD</p>
+  <p class="muted">طراحی رابط کاربری، برنامه‌نویسی و راه‌اندازی فروشگاه اینترنتی.</p></div>
+</div></div></section>
+{% endblock %}

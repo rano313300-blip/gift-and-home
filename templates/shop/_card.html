@@ -1,0 +1,17 @@
+{% load shop_extras %}
+<article class="card">
+  <a class="thumb" href="{{ p.get_absolute_url }}" style="background:{{ p.bg_color }}" aria-label="{{ p.name }}">
+    {% if p.discount_percent %}<span class="tag">{{ p.discount_percent|fa }}٪ تخفیف</span>{% endif %}
+    {% if p.image %}<img src="{{ p.image.url }}" alt="{{ p.name }}" loading="lazy">{% else %}{{ p.emoji }}{% endif %}
+  </a>
+  <div class="in">
+    <h3><a href="{{ p.get_absolute_url }}">{{ p.name }}</a></h3>
+    <div class="stars">{{ p.rating|stars }}<em>{{ p.rating|fa }}</em></div>
+    <div class="price"><b>{{ p.price|toman }}</b>{% if p.old_price %}<s>{{ p.old_price|num }}</s>{% endif %}</div>
+    {% if p.in_stock %}
+    <form method="post" action="{% url 'shop:cart_add' p.pk %}">{% csrf_token %}
+      <button class="btn btn-dark btn-block">افزودن به سبد خرید</button>
+    </form>
+    {% else %}<button class="btn btn-block" disabled>ناموجود</button>{% endif %}
+  </div>
+</article>

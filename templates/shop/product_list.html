@@ -1,0 +1,36 @@
+{% extends "base.html" %}{% load shop_extras %}
+{% block title %}فروشگاه | دورهمی{% endblock %}
+{% block content %}
+<div class="pagehead"><div class="wrap"><h1 style="font-size:2.4rem">فروشگاه</h1><p class="muted">همه محصولات آشپزخانه و هدیه، یک‌جا.</p></div></div>
+<section class="s" style="padding-top:32px"><div class="wrap">
+  <form class="toolbar" method="get">
+    <div class="chips">
+      <a class="chip {% if not cat %}on{% endif %}" href="{% url 'shop:product_list' %}">همه</a>
+      {% for c in categories %}<a class="chip {% if cat == c.slug %}on{% endif %}" href="?cat={{ c.slug }}">{{ c.name }}</a>{% endfor %}
+    </div>
+    <div class="sp">
+      {% if cat %}<input type="hidden" name="cat" value="{{ cat }}">{% endif %}
+      <input type="search" name="q" value="{{ q }}" placeholder="جستجوی محصول..." aria-label="جستجو">
+      <select name="sort" aria-label="مرتب‌سازی" onchange="this.form.submit()">
+        <option value="new" {% if sort == 'new' %}selected{% endif %}>جدیدترین</option>
+        <option value="low" {% if sort == 'low' %}selected{% endif %}>ارزان‌ترین</option>
+        <option value="high" {% if sort == 'high' %}selected{% endif %}>گران‌ترین</option>
+        <option value="pop" {% if sort == 'pop' %}selected{% endif %}>پرفروش‌ترین</option>
+      </select>
+      <button class="btn btn-dark" style="padding:8px 20px">جستجو</button>
+    </div>
+  </form>
+  <div class="grid">
+    {% for p in page %}{% include "shop/_card.html" %}
+    {% empty %}<div class="empty" style="grid-column:1/-1"><div class="em">🔍</div><h3>محصولی پیدا نشد</h3><p class="muted">عبارت دیگری را جستجو کنید یا همه دسته‌ها را ببینید.</p></div>
+    {% endfor %}
+  </div>
+  {% if page.paginator.num_pages > 1 %}
+  <div class="pager">
+    {% if page.has_previous %}<a href="?{{ qs_params }}&page={{ page.previous_page_number }}">قبلی</a>{% endif %}
+    <span>صفحه {{ page.number|fa }} از {{ page.paginator.num_pages|fa }}</span>
+    {% if page.has_next %}<a href="?{{ qs_params }}&page={{ page.next_page_number }}">بعدی</a>{% endif %}
+  </div>
+  {% endif %}
+</div></section>
+{% endblock %}
