@@ -1,5 +1,7 @@
 # Developed by AMIR AMMARZAD
+import json
 import math
+import re
 from unittest.mock import Mock, patch
 
 from django.test import TestCase, override_settings
@@ -34,6 +36,20 @@ class PurchaseFlowTests(TestCase):
     def _checkout(self, **over):
         self.client.post(reverse("shop:cart_add", args=[self.p.pk]), {"qty": 2})
         return self.client.post(reverse("shop:checkout"), {**CUSTOMER, **over})
+
+    def test_product_page_contains_valid_product_structured_data(self):
+        response = self.client.get(self.p.get_absolute_url())
+        self.assertEqual(response.status_code, 200)
+        match = re.search(r'<script type="application/ld\+json">\s*(.*?)\s*</script>', response.content.decode(), re.S)
+        self.assertIsNotNone(match)
+        schema = json.loads(match.group(1))
+        self.assertEqual(schema["@type"], "Product")
+        self.assertEqual(schema["name"], self.p.name)
+        self.assertEqual(schema["category"], self.p.category.name)
+        self.assertEqual(schema["offers"]["priceCurrency"], "IRR")
+        self.assertEqual(schema["offers"]["price"], str(self.p.price * 10))
+        self.assertEqual(schema["offers"]["availability"], "https://schema.org/InStock")
+        self.assertTrue(schema["url"].endswith(self.p.get_absolute_url()))
 
     def test_full_purchase_with_mock_gateway(self):
         r = self._checkout()

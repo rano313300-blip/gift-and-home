@@ -3,8 +3,22 @@
 {% block desc %}{{ product.description|truncatechars:150 }}{% endblock %}
 {% block extra_head %}
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"Product","name":"{{ product.name|escapejs }}","description":"{{ product.description|escapejs }}",
- "offers":{"@type":"Offer","priceCurrency":"IRR","price":"{{ product.price }}0","availability":"{% if product.in_stock %}https://schema.org/InStock{% else %}https://schema.org/OutOfStock{% endif %}"}}
+{
+  "@context": "https://schema.org",
+  "@type": "Product",
+  "name": "{{ product.name|escapejs }}",
+  "description": "{{ product.description|escapejs }}",
+  "url": "{{ request.build_absolute_uri|escapejs }}",
+  "category": "{{ product.category.name|escapejs }}",
+  {% if product.image %}"image": "{{ request.scheme }}://{{ request.get_host }}{{ product.image.url|escapejs }}",{% endif %}
+  "offers": {
+    "@type": "Offer",
+    "url": "{{ request.build_absolute_uri|escapejs }}",
+    "priceCurrency": "IRR",
+    "price": "{{ product.price }}0",
+    "availability": "{% if product.in_stock %}https://schema.org/InStock{% else %}https://schema.org/OutOfStock{% endif %}"
+  }
+}
 </script>
 {% endblock %}
 {% block content %}
