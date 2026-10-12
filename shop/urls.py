@@ -2,6 +2,7 @@
 from django.urls import path
 
 from . import views
+from . import seo
 
 app_name = "shop"
 
@@ -19,4 +20,6 @@ urlpatterns = [
     path("order/<str:code>/", views.order_detail, name="order_detail"),
     path("track/", views.track, name="track"),
     path("about/", views.about, name="about"),
+    path("sitemap.xml", seo.sitemap, name="sitemap"),
+    path("robots.txt", seo.robots, name="robots"),
 ]
