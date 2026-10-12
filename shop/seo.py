@@ -1,5 +1,6 @@
+from xml.sax.saxutils import escape
+
 from django.http import HttpResponse
-from django.utils.xmlutils import escape
 
 from .models import Product
 
