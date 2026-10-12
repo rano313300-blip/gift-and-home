@@ -2,8 +2,9 @@
 {% block title %}{{ product.name }} | دورهمی{% endblock %}
 {% block desc %}{{ product.description|truncatechars:150 }}{% endblock %}
 {% block extra_head %}
-<link rel="canonical" href="{{ request.build_absolute_uri }}">
-<meta property="og:url" content="{{ request.build_absolute_uri }}">
+{% url 'shop:product_detail' product.pk as canonical_path %}
+<link rel="canonical" href="{{ request.scheme }}://{{ request.get_host }}{{ canonical_path }}">
+<meta property="og:url" content="{{ request.scheme }}://{{ request.get_host }}{{ canonical_path }}">
 <meta property="og:type" content="product">
 <meta property="og:title" content="{{ product.name }}">
 <meta property="og:description" content="{{ product.description|truncatechars:200 }}">
@@ -15,11 +16,11 @@
   "name": "{{ product.name|escapejs }}",
   "description": "{{ product.description|escapejs }}",
   "category": "{{ product.category.name|escapejs }}",
-  "url": "{{ request.build_absolute_uri|escapejs }}",
+  "url": "{{ request.scheme }}://{{ request.get_host }}{{ canonical_path|escapejs }}",
   {% if product.image %}"image": "{{ request.scheme }}://{{ request.get_host }}{{ product.image.url|escapejs }}",{% endif %}
   "offers": {
     "@type": "Offer",
-    "url": "{{ request.build_absolute_uri|escapejs }}",
+    "url": "{{ request.scheme }}://{{ request.get_host }}{{ canonical_path|escapejs }}",
     "priceCurrency": "IRR",
     "price": "{{ product.price }}0",
     "availability": "{% if product.in_stock %}https://schema.org/InStock{% else %}https://schema.org/OutOfStock{% endif %}"
