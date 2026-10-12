@@ -2,9 +2,29 @@
 {% block title %}{{ product.name }} | دورهمی{% endblock %}
 {% block desc %}{{ product.description|truncatechars:150 }}{% endblock %}
 {% block extra_head %}
+<link rel="canonical" href="{{ request.build_absolute_uri }}">
+<meta property="og:url" content="{{ request.build_absolute_uri }}">
+<meta property="og:type" content="product">
+<meta property="og:title" content="{{ product.name }}">
+<meta property="og:description" content="{{ product.description|truncatechars:200 }}">
+{% if product.image %}<meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{{ product.image.url }}">{% endif %}
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"Product","name":"{{ product.name|escapejs }}","description":"{{ product.description|escapejs }}",
- "offers":{"@type":"Offer","priceCurrency":"IRR","price":"{{ product.price }}0","availability":"{% if product.in_stock %}https://schema.org/InStock{% else %}https://schema.org/OutOfStock{% endif %}"}}
+{
+  "@context": "https://schema.org",
+  "@type": "Product",
+  "name": "{{ product.name|escapejs }}",
+  "description": "{{ product.description|escapejs }}",
+  "category": "{{ product.category.name|escapejs }}",
+  "url": "{{ request.build_absolute_uri|escapejs }}",
+  {% if product.image %}"image": "{{ request.scheme }}://{{ request.get_host }}{{ product.image.url|escapejs }}",{% endif %}
+  "offers": {
+    "@type": "Offer",
+    "url": "{{ request.build_absolute_uri|escapejs }}",
+    "priceCurrency": "IRR",
+    "price": "{{ product.price }}0",
+    "availability": "{% if product.in_stock %}https://schema.org/InStock{% else %}https://schema.org/OutOfStock{% endif %}"
+  }
+}
 </script>
 {% endblock %}
 {% block content %}
@@ -32,17 +52,9 @@
     {% if product.stock <= 5 %}<p style="color:var(--ribbon);margin-top:8px">فقط {{ product.stock|fa }} عدد در انبار مانده است.</p>{% endif %}
     {% else %}<button class="btn" disabled>ناموجود</button>{% endif %}
     <ul class="pd-trust">
-      <li>🚚 ارسال با پست، پیشتاز و تیپاکس</li>
-      <li>🎀 امکان بسته‌بندی کادویی با کارت پیام</li>
-      <li>↩️ ۷ روز ضمانت بازگشت کالا</li>
-      <li>🔒 پرداخت امن با درگاه بانکی</li>
+      <li>🚚 ارسال با پست، پیشتاز و تیپاکس</li><li>🎀 امکان بسته‌بندی کادویی با کارت پیام</li><li>↩️ ۷ روز ضمانت بازگشت کالا</li><li>🔒 پرداخت امن با درگاه بانکی</li>
     </ul>
   </div>
 </div></section>
-{% if related %}
-<section class="s" style="padding-top:0"><div class="wrap">
-  <div class="head"><h2>محصولات مشابه</h2></div>
-  <div class="grid">{% for p in related %}{% include "shop/_card.html" %}{% endfor %}</div>
-</div></section>
-{% endif %}
+{% if related %}<section class="s" style="padding-top:0"><div class="wrap"><div class="head"><h2>محصولات مشابه</h2></div><div class="grid">{% for p in related %}{% include "shop/_card.html" %}{% endfor %}</div></div></section>{% endif %}
 {% endblock %}
